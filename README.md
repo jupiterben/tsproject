@@ -1,3 +1,3 @@
-# tsproject
+# TS Template Project
 
-# Typescript template project demostrate all feature of typescript
+# Typescript 模版工程
