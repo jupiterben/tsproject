@@ -1,7 +1,3 @@
 {
-    "cSpell.words": [
-        "Topo",
-        "immer",
-        "immerable"
-    ]
+    "typescript.preferences.quoteStyle": "single"
 }
