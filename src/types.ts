@@ -1,4 +1,4 @@
-type BasicType = boolean | number | string | undefined | null | void | never | symbol ;
+type BasicType = boolean | number | string | undefined | null | void | never | symbol;
 type ObjectKeyType = number | string | symbol;
 
 interface IAnyObj extends Record<ObjectKeyType, any> {
@@ -6,9 +6,8 @@ interface IAnyObj extends Record<ObjectKeyType, any> {
 }
 
 
-
-let a : IAnyObj = {
-    x: 1, 
+let a: IAnyObj = {
+    x: 1,
     y: 2,
 }
 
