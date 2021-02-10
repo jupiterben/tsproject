@@ -38,6 +38,33 @@ export const Math2d = {
     add(pt1: IPoint2d, pt2: IPoint2d) {
         return { x: pt1.x + pt2.x, y: pt1.y + pt2.y };
     },
+    lineLength(pt1: IPoint2d, pt2: IPoint2d) {
+        let diff = Math2d.sub(pt1, pt2);
+        return Math.sqrt(Math2d.dot(diff, diff));
+    },
+    isSamePoint(pt1: IPoint2d, pt2: IPoint2d, tol: number) {
+        return Math2d.lineLength(pt1, pt2) < tol;
+    },
+    simplyPolygon(polygon: IPoint2d[], tol: number) {
+        const simplePoly: IPoint2d[] = [];
+        let polyAdd: IPoint2d | undefined;
+        polygon.forEach(pt => {
+            if (polyAdd && Math2d.isSamePoint(polyAdd, pt, tol)) return;
+            polyAdd = pt;
+            simplePoly.push(polyAdd);
+        });
+        if (polyAdd && Math2d.isSamePoint(polyAdd, simplePoly[0], tol)) simplePoly.pop();
+        return simplePoly;
+    },
+    getPolygonArea(polygon: IPoint2d[]) {
+        let sum = 0;
+        for (let i = 0; i < polygon.length; i++) {
+            const p1 = polygon[i];
+            const p2 = polygon[(i >= (polygon.length - 1)) ? 0 : (i + 1)];
+            sum += (p1.x * p2.y - p1.y * p2.x);
+        }
+        return sum * 0.5;
+    },
     getBound(polygon: IPoint2d[], offsetFactor = 0) {
         const pt0 = polygon[0]
         let minx = pt0.x;
@@ -106,27 +133,10 @@ function getSubPolygon(fromIndex: number, toIndex: number, polygon: IPoint2d[]):
     return subPolygon;
 }
 
-// function isConvexPolygon(polygon: IPoint2d[]) {
-//     const len = polygon.length;
-//     for (let i = 0; i < len; i++) {
-//         const prev = polygon[(i - 1 + len) % len];
-//         const next = polygon[(i + 1) % len];
-//         const pt = polygon[i];
-//         const dir1 = Math2d.sub(pt, prev);
-//         const dir2 = Math2d.sub(pt, next);
-//         const enumDir1 = getDirEnum(dir1);
-//         const enumDir2 = getDirEnum(dir2);
-//         if (!enumDir1 || !enumDir2) continue;
-//         if (ConcaveNext.get(enumDir1!) !== enumDir2) continue;
-//         return false;
-//     }
-//     return true;
-// }
-
 // get divide introduced min rectangle width
-function getDivideInfo(pointIndex: number, dir: IPoint2d, polygon: IPoint2d[]) {
+function getDivideInfo(pointIndex: number, dir: IPoint2d, polygon: IPoint2d[], options: ISplitOptions) {
     const concavePt = polygon[pointIndex];
-    const intersect = getDirIntersect(concavePt, dir, polygon, 0.0001);
+    const intersect = getDirIntersect(concavePt, dir, polygon, options.tolerance);
     if (!intersect) return;
 
     const segment: IPoint2d[] = [concavePt, intersect.pt];
@@ -142,9 +152,6 @@ function getDivideInfo(pointIndex: number, dir: IPoint2d, polygon: IPoint2d[]) {
         subPoly2 = getSubPolygon(intersect.index, pointIndex, polygon);
     }
     const intrLens: number[] = [];
-    // if (intersect.type === 'edge') {
-    //     intrLens.push(intersect.length);
-    // }
     const getIntrLen = (subPolygon: IPoint2d[]) => {
         for (let i = 1; i < subPolygon.length - 1; i++) {
             const v1 = Math2d.sub(subPolygon[i], concavePt);
@@ -158,13 +165,6 @@ function getDivideInfo(pointIndex: number, dir: IPoint2d, polygon: IPoint2d[]) {
             }
         }
     }
-    // const getBoundRatio = (subPolygon: IPoint2d[]) => {
-    //     const bound = Math2d.getBound(subPolygon);
-    //     if (!isConvexPolygon(subPolygon)) return 0;
-    //     return Math.atan2((bound.height + bound.width) / 2, Math.abs(bound.width - bound.height)) * 2 / Math.PI;
-    // }
-    // const r1 = getBoundRatio(subPoly1);
-    // const r2 = getBoundRatio(subPoly2);
     getIntrLen(subPoly1);
     getIntrLen(subPoly2);
     intrLens.sort((a, b) => a - b);
@@ -181,8 +181,8 @@ function getDirEnum(dir: IPoint2d): DirEnum | undefined {
     return;
 }
 
-
-export function dividePolygon(polygon: IPoint2d[]): { segment: IPoint2d[], subPoly1: IPoint2d[], subPoly2: IPoint2d[] } | undefined {
+function dividePolygon(polygon: IPoint2d[], options: ISplitOptions): { segment: IPoint2d[], subPoly1: IPoint2d[], subPoly2: IPoint2d[] } | undefined {
+    const { ignoreSmallCorner } = options;
     let divide;
     let bestScore = 0;
     const len = polygon.length;
@@ -195,9 +195,10 @@ export function dividePolygon(polygon: IPoint2d[]): { segment: IPoint2d[], subPo
         const enumDir1 = getDirEnum(dir1);
         const enumDir2 = getDirEnum(dir2);
         if (!enumDir1 || !enumDir2) continue;
+        if (Math2d.lineLength(pt, prev) < ignoreSmallCorner || Math2d.lineLength(pt, next) < ignoreSmallCorner) continue; //skip small corner
         if (ConcaveNext.get(enumDir1!) !== enumDir2) continue;
 
-        const div1 = getDivideInfo(i, DirValue.get(enumDir1)!, polygon);
+        const div1 = getDivideInfo(i, DirValue.get(enumDir1)!, polygon, options);
         if (div1) {
             if (!divide || bestScore < div1.score) {
                 bestScore = div1.score;
@@ -205,7 +206,7 @@ export function dividePolygon(polygon: IPoint2d[]): { segment: IPoint2d[], subPo
             }
         }
 
-        const div2 = getDivideInfo(i, DirValue.get(enumDir2)!, polygon);
+        const div2 = getDivideInfo(i, DirValue.get(enumDir2)!, polygon, options);
         if (div2) {
             if (!divide || bestScore < div2.score) {
                 bestScore = div2.score;
@@ -216,14 +217,27 @@ export function dividePolygon(polygon: IPoint2d[]): { segment: IPoint2d[], subPo
     return divide;
 }
 
-export function splitPolygon(polygon: IPoint2d[]) {
+export interface ISplitOptions {
+    ignoreSmallCorner: number;
+    tolerance: number;
+}
+const DefaultSplitOption = {
+    ignoreSmallCorner: 0.1,
+    tolerance: 0.001,
+}
+
+export function splitPolygon(polygon: IPoint2d[], options?: ISplitOptions) {
+    const splitOptions = Object.assign({}, DefaultSplitOption, options);
     let segments = [];
     const subPolygons = [];
+    polygon = Math2d.simplyPolygon(polygon, splitOptions.tolerance);
+    if (Math2d.getPolygonArea(polygon) < 0) {
+        polygon.reverse();
+    }
     const candidates = [polygon];
-
     let c;
     while (c = candidates.pop()) {
-        const divide = dividePolygon(c);
+        const divide = dividePolygon(c, splitOptions);
         if (divide) {
             candidates.push(divide.subPoly1, divide.subPoly2);
             segments.push(divide.segment);
