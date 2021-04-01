@@ -13,21 +13,20 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "build": "webpack --mode=production --progress --colors && npm run build-types",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "build-types": "tsc -p ./tsconfig.d.json",
     "test": "jest --coverage",
     "report-coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jupiterben/tsproject.git"
+    "url": ""
   },
-  "author": "jupiterben",
+  "author": "--username--",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jupiterben/tsproject/issues"
   },
-  "homepage": "https://github.com/jupiterben/tsproject#readme",
+  "homepage": "--homepage--",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
     "@types/jest": "^26.0.22",
