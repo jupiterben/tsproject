@@ -62,7 +62,7 @@ module.exports = function (env, argv) {
                 }, {
                     loader: 'ts-loader',
                     options: {
-                        configFile: 'tsconfig.js.json',
+                        configFile: 'tsconfig.json',
                         transpileOnly: true,
                     },
                 }],
