@@ -1,6 +1,6 @@
 import { MyClass } from '../src/myclass';
 
-describe('test', () => {
+test('test MyClass', () => {
     it('create MyClass', async () => {
         expect(new MyClass()).toBeInstanceOf(MyClass)
     });
