@@ -1,1 +1,1 @@
-
+export { MyClass } from './myclass';
