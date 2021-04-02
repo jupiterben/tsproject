@@ -5,16 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "main",
-            "type": "node",
+            "name": "ts-node",
+            "type": "pwa-node",
             "request": "launch",
-            "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
             "args": [
-                "${workspaceRoot}/src/main.ts"
+                "${relativeFile}"
+            ],
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register"
             ],
             "cwd": "${workspaceRoot}",
-            "stopOnEntry": false,
-            "protocol": "inspector"
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }

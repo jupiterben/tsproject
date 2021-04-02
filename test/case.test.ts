@@ -1,7 +1,7 @@
-import { MyClass } from '../src/myclass';
+import { MyClass } from '../src/lib';
 
-test('test MyClass', () => {
-    it('create MyClass', async () => {
+describe('test MyClass', () => {
+    test('create MyClass', async () => {
         expect(new MyClass()).toBeInstanceOf(MyClass)
     });
 });

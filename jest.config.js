@@ -5,11 +5,6 @@ module.exports = {
     testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     //testEnvironment: "jest-environment-jsdom-global",
-    moduleFileExtensions: [
-        "ts",
-        "tsx",
-        "js"
-    ],
     coveragePathIgnorePatterns: [
         "/node_modules/",
         "/test/"
