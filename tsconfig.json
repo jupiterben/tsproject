@@ -1,6 +1,5 @@
 {
-  //"extends": "./tsconfig.common.json",
-  "extends": "@tsconfig/recommended/tsconfig.json",
+  "extends": "./tsconfig.common.json",
   "compilerOptions": {
     "target": "ES2015",
     "module": "commonjs",

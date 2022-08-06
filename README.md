@@ -1,16 +1,28 @@
-# TS Template Project 
+# TS Template Project
 
-## webpack5 + jest
+## Recommand Tools
 
-https://github.com/alexjoverm/typescript-library-starter
+### nvm nodejs 版本管理
+
+brew install nvm
+
+### pnpm node包管理
+
+npm install -g pnpm
+
+## snowpack + jest
+
+### Ref Projects
 
 https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
-
-
 https://github.com/forthealllight/blog/issues/45
-eslint --init
-## 单元测试 
+https://github.com/FredKSchott/snowpack/tree/main/create-snowpack-app/
+https://github.com/FredKSchott/snowpack/tree/main/create-snowpack-app/app-scripts-preact
+app-template-blank-typescript
 
-Jest 
+## 单元测试
+
+Jest
 npm install --save-dev jest
 
+## 依赖 lib
