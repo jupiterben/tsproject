@@ -104,3 +104,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+.build/
+pnpm-lock.yaml
+.parcel-cache

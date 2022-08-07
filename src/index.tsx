@@ -1,10 +1,8 @@
-import { h, render } from "preact";
-import "preact/devtools";
-import App from "./App.js";
+import * as React from "react";
+import { render } from "react-dom";
 import "./index.css";
+import * as logo from "./logo.png";
 
-const root = document.getElementById("root");
+const Application = () => <h1>Application</h1>;
 
-if (root) {
-    render(<App />, root);
-}
+render(<Application />, document.getElementById("root"));
