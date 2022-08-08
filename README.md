@@ -10,7 +10,7 @@ parcel ：npm i -g parcel
 
 ## Quick Start
 
-pnpm install 
+pnpm install
 
 npm start
 
