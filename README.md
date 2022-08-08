@@ -10,7 +10,7 @@ brew install nvm
 
 npm install -g pnpm
 
-## snowpack + jest
+## parcel + jest
 
 ### Ref Projects
 
