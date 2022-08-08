@@ -1,28 +1,22 @@
-# TS Template Project
+# Typescript Template Project（Parcel）
 
-## Recommand Tools
+## Depend Tools
 
-### nvm nodejs 版本管理
+nvm ：brew install nvm
 
-brew install nvm
+pnpm： npm i -g pnpm
 
-### pnpm node包管理
+parcel ：npm i -g parcel
 
-npm install -g pnpm
+## Quick Start
 
-## parcel + jest
+pnpm install 
 
-### Ref Projects
+npm start
+
+## Unit Test
+
+### References
 
 https://www.typescriptlang.org/docs/handbook/tsconfig-json.html
 https://github.com/forthealllight/blog/issues/45
-https://github.com/FredKSchott/snowpack/tree/main/create-snowpack-app/
-https://github.com/FredKSchott/snowpack/tree/main/create-snowpack-app/app-scripts-preact
-app-template-blank-typescript
-
-## 单元测试
-
-Jest
-npm install --save-dev jest
-
-## 依赖 lib
